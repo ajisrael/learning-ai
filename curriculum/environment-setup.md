@@ -46,9 +46,9 @@ Verify: `python -c "import numpy, pandas, sklearn, matplotlib; print('ok')"` ins
 
 **Git hygiene (mandatory):** this repo is your course repo. Commit the milestone examples you modify so your decisions are logged. Add a `.venv/` to `.gitignore` if not already ignored.
 
-## GTX-970 box (fresh OS on the 2TB NVMe)
+## GTX-970 box (Ubuntu 22.04 LTS on the 2TB NVMe)
 
-This card is **Maxwell, compute capability 5.2 (sm_52)** - NVIDIA's legacy list. The constraint that decides everything:
+This box runs **Ubuntu 22.04 LTS** - the best-supported base for the legacy driver this card needs. This card is **Maxwell, compute capability 5.2 (sm_52)** - NVIDIA's legacy list. The constraint that decides everything:
 
 - CUDA **12.x does not support Maxwell**. The last CUDA 11.8 (cu118) PyTorch wheels go up to **torch 2.7.1**; after that only CUDA 12 builds exist.
 - NVIDIA's last driver branch supporting Maxwell is the **legacy 470.x** series.
@@ -56,7 +56,7 @@ This card is **Maxwell, compute capability 5.2 (sm_52)** - NVIDIA's legacy list.
 So this box is pinned to: **legacy driver + CUDA 11.8 toolchain + torch cu118 (2.7.1 or earlier).** It will never run the latest PyTorch - that is fine, phase 2-3 scale does not need it.
 
 ```bash
-# Ubuntu 22.04 LTS (recommended for the box - best legacy-driver support)
+# Ubuntu 22.04 LTS is already installed on this box.
 sudo apt install nvidia-driver-470        # the last driver that supports Maxwell
 reboot
 nvidia-smi                                # should list the GTX 970, driver 470.x
@@ -91,7 +91,7 @@ On the laptop, run `projects/phase-0/milestone-0.1/verify_environment.py`. It pr
 
 ## Open questions to confirm as you set up
 
-- **GTX-970 box OS:** Ubuntu 22.04 LTS recommended for driver-470 support. If you'd rather run Arch or Debian there, driver packages differ (`nvidia-470xx-dkms` on Arch; `nvidia-legacy-470xx-driver` on Debian) - say so and I'll adjust.
+- **GTX-970 box OS:** decided - Ubuntu 22.04 LTS.
 - **R610 container vs VM:** a Proxmox LXC container is lighter and fine for CPU inference; a VM is more isolated. Either works.
 - **Laptop GPU:** if the laptop also has an NVIDIA GPU, the same cu118 rule applies there; otherwise laptop stays CPU-only.
 
