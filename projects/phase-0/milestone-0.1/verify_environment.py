@@ -18,7 +18,7 @@ import sys
 print(f"Python: {sys.version.split()[0]}")
 
 # The core course stack - all required for Phase 1.
-required = ["numpy", "pandas", "matplotlib", "seaborn", "scikit-learn"]
+required = ["numpy", "pandas", "matplotlib", "seaborn", "sklearn"]
 for name in required:
     try:
         mod = importlib.import_module(name)
