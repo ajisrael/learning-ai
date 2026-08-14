@@ -1,0 +1,10 @@
+# uv-managed CPython + project venv - recreated by scripts/setup-env.sh
+.local/
+.venv/
+
+# Python noise
+__pycache__/
+*.egg-info/
+
+# direnv state (local to a machine; .envrc itself is tracked)
+.direnv/
