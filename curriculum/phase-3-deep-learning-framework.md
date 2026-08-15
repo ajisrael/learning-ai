@@ -29,6 +29,21 @@ You chose PyTorch - verified 2026 consensus: it dominates research and new indus
 
 ## Hands-on projects
 
+### Project 3.0 - GTX-970 box setup (task 0, before Project 3.1)
+
+**Why now:** Project 3.1 starts real PyTorch/fast.ai training. The GTX-970 is a *phase 2-3 scale* box (4GB VRAM, Maxwell) — it handles the small runs this phase trains, with Kaggle's free 30h/wk GPU as the escape hatch for the rest. Set it up before your first training run, not in week 1 of phase 0.
+
+**Deliverable:** the box answers `torch.cuda.is_available()` → `True` on the pinned cu118 build, and `verify_environment.py` runs clean there.
+
+**Checkpoints to verify yourself:**
+- [ ] Ubuntu 22.04 LTS installed (the base the legacy driver needs)
+- [ ] `nvidia-driver-470` installed; `nvidia-smi` shows the GTX 970
+- [ ] `./scripts/setup-env.sh` run — same uv toolchain as the laptop
+- [ ] `uv pip install torch==2.7.1 torchvision==0.22.1` from the cu118 index
+- [ ] `torch.cuda.is_available()` is `True` and `get_arch_list()` contains `sm_52` — or you've consciously chosen CPU and documented it (valid for all of phases 2-3)
+
+**Full instructions:** `curriculum/environment-setup.md` → "GTX-970 box". The Ansible role that provisions this box is built here, as part of the task. Tag: `v3.0`.
+
 ### Project 3.1 - Vision: your own classifier (Weeks 1-3)
 
 Follow the fast.ai path: train an image classifier on a dataset you care about (pets, plants, product photos - whatever interests you). Use transfer learning from a pretrained model. Then push it: tune, augment, and get it measurably better.

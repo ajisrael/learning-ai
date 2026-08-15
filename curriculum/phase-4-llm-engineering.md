@@ -31,6 +31,20 @@ The 2026 consensus (verified across multiple current roadmaps) is blunt: **promp
 
 ## Hands-on projects
 
+### Project 4.0 - R610/Ollama setup (task 0, before Project 4.1)
+
+**Why now:** every project in this phase runs local inference against a quantized 7B-class model — RAG grounding, eval experiments, agent loops. Get the box serving before you build on it.
+
+**Deliverable:** Ollama serves on the LAN, and from the laptop `curl http://<r610-ip>:11434/api/tags` lists your pulled model.
+
+**Checkpoints to verify yourself:**
+- [ ] LXC container/VM created on Proxmox (Debian template, ~32GB RAM, static IP)
+- [ ] Ollama installed and serving on `0.0.0.0:11434`
+- [ ] `ollama pull llama3.1:8b` (or `qwen2.5:7b`) — one 7B-class model
+- [ ] From the laptop: `curl http://<r610-ip>:11434/api/tags` returns the model list, and `ollama run llama3.1:8b` answers a prompt over the LAN
+
+**Full instructions:** `curriculum/environment-setup.md` → "R610 (Proxmox)". The Ansible role that provisions this box is built here, as part of the task. Tag: `v4.0`.
+
 ### Project 4.1 - RAG from first principles (Weeks 1-3) ⭐ your first portfolio piece
 
 Build "chat with your docs" over a real corpus you care about (a set of public reports, your own notes, a manual, legal texts - pick something meaty). First build it WITHOUT a framework: chunk → embed → vector store → retrieve → prompt with citations. Then measure it.

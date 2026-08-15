@@ -14,10 +14,21 @@
 | **GTX-970 box** (2TB NVMe, fresh OS) | Small PyTorch training/experiments (phase 2-3 scale) | OS + NVIDIA driver (legacy 470) + PyTorch `cu118` |
 | **R610 (Proxmox)** | CPU inference box: Ollama for quantized LLMs (phases 4-5) | Ollama + a 7B model, reachable over LAN |
 
+**When each machine gets set up (just-in-time, not all at once):**
+
+| Machine | Set up at | Because |
+| --- | --- | --- |
+| Laptop (Arch) | **Milestone 0.1** — now | The primary work machine; every phase runs here |
+| GTX-970 box | **Project 3.0** (task 0 of phase 3) | Its PyTorch training is phase 2-3 scale; phases 0-2 run on the laptop |
+| R610 (Proxmox) | **Project 4.0** (task 0 of phase 4) | It only serves the LLM inference phases 4-5 need |
+
+The laptop setup is M0.1's deliverable. Each remote box gets set up when its phase starts, using its task-0 checkpoints in the phase docs (phase-3 doc for the GTX-970, phase-4 doc for the R610).
+
 ## Provisioning the remote boxes (Ansible)
 
 Ansible is how the non-laptop machines (GTX-970 box, R610) get their toolchain, run from the laptop as the control node. A role installs `uv`, then runs the tracked `./scripts/setup-env.sh` — the same script the laptop uses, so every machine gets an identical, project-local, uv-managed CPython 3.12:
 
+- Each box's provisioning role is built **when that box's task-0 arrives** — the GTX-970 role in Project 3.0, the R610 role in Project 4.0 — not during M0.1. You know the box's requirements by then, and the role is written to match.
 - The script handles `uv python install 3.12` + `uv venv --python 3.12 --relocatable .venv` + the phase 0-1 stack. Never `apt install python3-pip` and pip into the system Python on a target — `apt` upgrades its own `python3` exactly like `pacman` does, so a system-python venv gets the same dangling-symlink breakage.
 - The GTX-970 box adds torch after the script (cu118, see below); the R610 needs no extra Python.
 - Pin **3.12 on every target**, matching the laptop. Version drift between machines is what the one rule exists to prevent.
@@ -65,7 +76,7 @@ Verify: `python -c "import numpy, pandas, sklearn, matplotlib; print('ok')"` ins
 
 **Git hygiene (mandatory):** this repo is your course repo. Commit the milestone examples you modify so your decisions are logged. `.gitignore` (tracked) already excludes `.local/`, `.venv/`, `__pycache__/`, `*.egg-info/` — don't commit the environment, only `scripts/setup-env.sh` and `.envrc`, which are the reproducibility.
 
-## GTX-970 box (Ubuntu 22.04 LTS on the 2TB NVMe)
+## GTX-970 box (Ubuntu 22.04 LTS on the 2TB NVMe) — set up in Project 3.0
 
 This box runs **Ubuntu 22.04 LTS** - the best-supported base for the legacy driver this card needs. This card is **Maxwell, compute capability 5.2 (sm_52)** - NVIDIA's legacy list. The constraint that decides everything:
 
@@ -91,7 +102,7 @@ python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_
 
 If `torch.cuda.is_available()` is `False`, or `get_arch_list()` lacks `sm_52`, you have two options: try an older cu118 build (e.g. `torch==2.4.1`), **or run CPU** - valid for everything in phases 2-3. Do not burn more than a few hours on this; CPU is the stated fallback.
 
-## R610 (Proxmox) - Ollama inference box
+## R610 (Proxmox) - Ollama inference box — set up in Project 4.0
 
 ```bash
 # on Proxmox: create a container/VM for ollama (Debian template, ~32GB RAM)
@@ -110,8 +121,10 @@ On the laptop, run `projects/phase-0/milestone-0.1/verify_environment.py`. It pr
 
 ## Open questions to confirm as you set up
 
-- **GTX-970 box OS:** decided - Ubuntu 22.04 LTS.
-- **R610 container vs VM:** a Proxmox LXC container is lighter and fine for CPU inference; a VM is more isolated. Either works.
+None of these block M0.1 — they resolve when each box's task-0 arrives:
+
+- **GTX-970 box OS:** decided - Ubuntu 22.04 LTS (confirmed during Project 3.0).
+- **R610 container vs VM:** a Proxmox LXC container is lighter and fine for CPU inference; a VM is more isolated. Either works (decide during Project 4.0).
 - **Laptop GPU:** if the laptop also has an NVIDIA GPU, the same cu118 rule applies there; otherwise laptop stays CPU-only.
 
 ## Cost

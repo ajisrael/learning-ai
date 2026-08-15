@@ -46,14 +46,14 @@ Add a check for `jupyter --version` (you'll use Jupyter daily). If you prefer to
 Temporarily run it inside a bare shell (no venv activated). Watch it fail on `import numpy`. This is the failure mode you must never confuse with a real bug - "my code is fine, my env is wrong". Being able to tell the difference immediately is the skill of this milestone.
 
 **M0.1.3 - Write the reachability test.**
-If your R610/Ollama is up, extend the script to `curl`-check `http://<r610-ip>:11434/api/tags` and print "Ollama reachable: yes/no". If the GTX-970 box is up, add a `nvidia-smi` check.
+Extend the script with a `curl`-check of `http://<r610-ip>:11434/api/tags` (empty host = skipped) and a `nvidia-smi` check. Both stay dormant until their boxes come online — the R610 in Project 4.0, the GTX-970 in Project 3.0 — then go live by filling in the IP.
 
 ## Milestone project 0.1 - the environment is done when...
 
 - [ ] `verify_environment.py` runs clean on the laptop with every import present
-- [ ] The GTX-970 box answers `torch.cuda.is_available()` `True` (or you've consciously chosen CPU and documented it)
-- [ ] `curl http://<r610-ip>:11434/api/tags` from the laptop lists your pulled model
 - [ ] This repo is a git repo with `.venv/` ignored, and you've committed your first change
+
+**The other two machines are NOT part of M0.1 anymore.** They're set up just-in-time as task 0 of the phase that actually needs them: the GTX-970 box in **Project 3.0**, the R610/Ollama box in **Project 4.0**. The verify script's optional checks (torch/nvidia-smi/Ollama) stay wired up and will go live as those boxes come online.
 
 **Full setup instructions, per machine:** `curriculum/environment-setup.md`.
 
@@ -185,7 +185,7 @@ Pick a real diagnostic example (e.g. a test with known sensitivity/specificity a
 
 ## Mastery rubric - you're done with Phase 0 when...
 
-- Your `verify_environment.py` runs clean everywhere (or you've consciously documented a CPU-only GTX-970 choice)
+- Your `verify_environment.py` runs clean on the laptop (the GPU box and R610 checks come online in phases 3 and 4)
 - You can load, clean, and explore an unfamiliar dataset in pandas without checking docs on every call
 - You can express a data operation as a vectorized NumPy line instead of a loop
 - You can explain dot products, the chain rule, and a normal distribution in plain words (your own words, not memorized)
