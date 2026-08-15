@@ -7,9 +7,10 @@ checks for GPU (PyTorch CUDA) and the R610/Ollama inference box. Runs on all
 three machines - the same script tells you what is missing everywhere.
 
 Modifications to try (from phase-0-setup-python-math.md, M0.1.1 - M0.1.3):
-  M0.1.1  add a jupyter --version check, or change the output format
-  M0.1.2  run it in a bare shell (no venv) and watch it fail on imports
-  M0.1.3  add an Ollama reachability check (curl to your R610) and/or nvidia-smi
+ [x]  M0.1.1  add a jupyter --version check, or change the output format
+ [x]  M0.1.2  run it in a bare shell (no venv) and watch it fail on imports
+ [x]  M0.1.3  Ollama + nvidia-smi checks are written and dormant; fill in
+            OLLAMA_HOST when the R610 comes online (Project 4.0)
 """
 
 import importlib
@@ -18,7 +19,7 @@ import sys
 print(f"Python: {sys.version.split()[0]}")
 
 # The core course stack - all required for Phase 1.
-required = ["numpy", "pandas", "matplotlib", "seaborn", "sklearn"]
+required = ["jupyterlab", "numpy", "pandas", "matplotlib", "seaborn", "sklearn"]
 for name in required:
     try:
         mod = importlib.import_module(name)
