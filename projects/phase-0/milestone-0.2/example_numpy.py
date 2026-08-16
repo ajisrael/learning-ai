@@ -9,7 +9,7 @@ Modifications to try (from phase-0-setup-python-math.md, M0.2.1 - M0.2.4):
   [x]  M0.2.1  rewrite arr.sum(axis=1) as an explicit Python loop, compare results
   [x]  M0.2.2  make a broadcast fail on purpose and read the error message
   [x]  M0.2.3  verify one matrix-multiply cell against a manual dot product
-  [ ]  M0.2.4  extend into a tiny linear model: predictions + MSE loss, vectorized
+  [x]  M0.2.4  extend into a tiny linear model: predictions + MSE loss, vectorized
 """
 
 import numpy as np
@@ -93,9 +93,14 @@ print("\nouter product col * row =\n", col * row)
 
 # -----------------------------------------------------------------------------
 # M0.2.4: Extend into a tiny linear model: predictions + MSE loss, vectorized.
-#   Data is provided below. Write it VECTORIZED (no loop over samples):
-#     preds = X @ w              # one dot product per sample -> a prediction
-#     mse   = np.mean((preds - y) ** 2)
+#   Data is provided below. Write it VECTORIZED (no loop over samples).
+#
+#   Hint:
+#   - predictions are the dot product of input data (X) and the weights of
+#     the network (w)
+#   - MSE = the mean of the squared differences between predictions and the
+#     real answers (y)
+#
 #   Print both.
 # -----------------------------------------------------------------------------
 
@@ -103,4 +108,8 @@ w = np.array([0.5, -1.0])                           # one weight per feature
 X = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])  # 3 samples, 2 features
 y = np.array([2.0, 5.0, 8.0])                       # the real answers
 
-# >>> your vectorized code goes here <<<
+preds = X @ w
+mse   = np.mean((preds - y) ** 2)
+
+print("\nPredictions: ", preds)
+print("MSE: ", mse)
