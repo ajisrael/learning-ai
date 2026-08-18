@@ -7,10 +7,10 @@ missing values, cleans them, and produces two plots saved to files. The plot
 code is kept as a plain script so you can refactor it into a function (M0.3.4).
 
 Modifications to try (from phase-0-setup-python-math.md, M0.3.1 - M0.3.4):
-  M0.3.1  write a one-line justification next to each cleaning decision
-  M0.3.2  derive a new column from existing ones
-  M0.3.3  add a groupby and a merge on a key
-  M0.3.4  refactor the plotting into a reusable function
+  [ ]  M0.3.1  write a one-line justification next to each cleaning decision
+  [ ]  M0.3.2  derive a new column from existing ones
+  [ ]  M0.3.3  add a groupby and a merge on a key
+  [ ]  M0.3.4  refactor the plotting into a reusable function
 """
 
 import os
@@ -28,21 +28,47 @@ print("\ndtypes:\n", df.dtypes)
 print("\nfirst 5 rows:\n", df.head())
 print("\nmissing values per column:\n", df.isna().sum())
 
-# --- Cleaning decisions ------------------------------------------------------
+# -----------------------------------------------------------------------------
+# M0.3.1: Write a one-line justification next to each cleaning decision.
+#   Each decision below already carries one as a model - keep the habit: every
+#   decision you make gets a reason (why drop, why fill, why that value).
+# -----------------------------------------------------------------------------
+
 # decision: 'revenue' is the target - drop rows where it is missing, because
 # a row without its target is useless for prediction.
 df = df.dropna(subset=["revenue"])
 # decision: fill missing 'units' with the column mean - units correlates with
 # revenue, and the mean is the least-biased simple fill.
 df["units"] = df["units"].fillna(df["units"].mean())
-# decision: coerce 'region' to a categorical type (it has a small fixed set).
-df["region"] = df["region"].astype("category")
+# decision: coerce 'category' to a categorical type (it has a small fixed set).
+df["category"] = df["category"].astype("category")
 
 print("\nafter cleaning, missing values:\n", df.isna().sum().sum())
 
+# -----------------------------------------------------------------------------
+# M0.3.2: Derive a new column from existing ones.
+#   Hint: a ratio of two numeric columns, a category bucketing, or a datetime
+#   parse are all fair game. Include it in the plots below.
+# >>> your new column goes here <<<
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# M0.3.3: Add a groupby and a merge on a key.
+#   Hint: group by a categorical column and take the mean of a numeric one and
+#   print it; then build a second tiny dataset and merge on a shared key.
+# >>> your groupby / merge goes here <<<
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# M0.3.4: Refactor the plotting into a reusable function.
+#   Turn the plot code below into a function that takes a DataFrame and plot
+#   settings, so it can be re-run on new data without edits. The two plots
+#   below should end up calling it.
+# -----------------------------------------------------------------------------
+
 # --- Plot 1: revenue by region ----------------------------------------------
-df.groupby("region", observed=True)["revenue"].sum().plot(kind="bar")
-plt.title("Revenue by region")
+df.groupby("category", observed=True)["revenue"].sum().plot(kind="bar")
+plt.title("Revenue by category")
 plt.savefig(os.path.join(HERE, "revenue_by_region.png"))
 plt.close()
 
@@ -53,5 +79,5 @@ plt.savefig(os.path.join(HERE, "units_vs_revenue.png"))
 plt.close()
 
 print("\nSaved plots:")
-print("  projects/phase-0/milestone-0.3/revenue_by_region.png")
+print("  projects/phase-0/milestone-0.3/revenue_by_category.png")
 print("  projects/phase-0/milestone-0.3/units_vs_revenue.png")
